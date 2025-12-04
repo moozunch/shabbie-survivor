@@ -279,8 +279,17 @@ MonoBehaviour:
   checkerRadius: 0.2
   terrainMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   currentChunk: {fileID: 0}
+  spawnedChunks: []
+  latestChunk: {fileID: 1840055042}
+  maxOpDist: 50
+  optimezerCooldownDur: 1
+--- !u!1 &1840055042 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8636888487175675560, guid: 9ed116a21472e87428a3fe6d7b34ef8a, type: 3}
+  m_PrefabInstance: {fileID: 7792876782215720463}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1901997109
 GameObject:
   m_ObjectHideFlags: 0

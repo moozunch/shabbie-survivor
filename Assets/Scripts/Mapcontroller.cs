@@ -13,6 +13,15 @@ public class MapController : MonoBehaviour
     PlayerMovement pm;
     public GameObject currentChunk;
 
+    [Header("Optimization")]
+    public List<GameObject> spawnedChunks;
+    public GameObject latestChunk;
+    public float maxOpDist; //max distance from player to despawn, must be > chunk size
+    float opDist;
+
+    float optimezerCooldown;
+    public float optimezerCooldownDur;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +32,7 @@ public class MapController : MonoBehaviour
     void Update()
     {
         ChunkChecker();
+        ChunkOptimizater();
     }
 
     void ChunkChecker()
@@ -35,12 +45,12 @@ public class MapController : MonoBehaviour
         //semua static point gerakan
         if (pm.moveDir.x > 0 && pm.moveDir.y == 0) //right
         {
-            if(!Physics2D.OverlapCircle(currentChunk.transform.Find("Right").position, checkerRadius, terrainMask))
+            if (!Physics2D.OverlapCircle(currentChunk.transform.Find("Right").position, checkerRadius, terrainMask))
             {
                 noTerrainPosition = currentChunk.transform.Find("Right").position;
                 SpawnChunk();
             }
-            
+
         }
         else if (pm.moveDir.x < 0 && pm.moveDir.y == 0) //left
         {
@@ -105,11 +115,39 @@ public class MapController : MonoBehaviour
             }
 
         }
-    }  
+    }
 
     void SpawnChunk()
     {
         int rand = Random.Range(0, terrainChunks.Count);
         Instantiate(terrainChunks[rand], noTerrainPosition, Quaternion.identity);
+        spawnedChunks.Add(latestChunk);
+    }
+
+    //supaya bergerak + 50 jd nggak kelihatan loading dan yang belakang itu dihapus supaya nggak berat processing power
+    void ChunkOptimizater()
+    {
+        optimezerCooldown -= Time.deltaTime;
+        if (optimezerCooldown < 0f)
+        {
+            optimezerCooldown = optimezerCooldownDur;
+        }
+        else
+        {
+            return;
+        }
+        foreach (GameObject chunk in spawnedChunks)
+            {
+
+                opDist = Vector3.Distance(player.transform.position, chunk.transform.position);
+                if (opDist > maxOpDist)
+                {
+                    chunk.SetActive(false);
+                }
+                else
+                {
+                    chunk.SetActive(true);
+                }
+            }
     }
 }
