@@ -6,6 +6,7 @@ public class PlayerStats : MonoBehaviour
 {
     public CharacterScriptableObject characterData;
 
+    // Current stats
     float currentHealth;
     float currentRecovery;
     float currentMoveSpeed;
@@ -27,6 +28,12 @@ public class PlayerStats : MonoBehaviour
     public int experienceCapIncrease;
   }
 
+    // i - frame
+    [Header("I-Frames")]
+    public float invincibilityDuration;
+    float invicibilityTimer;
+    bool isInvincible;
+
     public List<LevelRange> levelRanges;
 
     void Awake()
@@ -44,6 +51,20 @@ public class PlayerStats : MonoBehaviour
         // Set initial experience cap based on level ranges
         experienceCap = levelRanges[0].experienceCapIncrease;
     }
+
+    void Update()
+    {
+        // Handle invincibility timer
+        if (invicibilityTimer > 0)
+        {
+            invicibilityTimer -= Time.deltaTime;
+        }
+        else if (isInvincible)
+        {
+            isInvincible = false;
+        }
+    }
+    
 
     public void IncreaseExperience(int amount)
     {
@@ -74,8 +95,42 @@ public class PlayerStats : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void TakeDamage(float dmg)
     {
+        if (!isInvincible)
+        {
+            currentHealth -= dmg;
+
+            invicibilityTimer = invincibilityDuration;
+            isInvincible = true;
+
+            if (currentHealth <= 0)
+            {
+                Kill();
+            }
+
+        }
+
+    }
+
+    public void Kill()
+    {
+        Debug.Log("Player Is DEAD");
+    }
+
+    public void RestoreHealth(float amount)
+    {
+        // only heal the player if their current health is less than max health
+        if (currentHealth + amount < characterData.MaxHealth)
+        {
+            currentHealth += amount;
+
+            // make sure current health does not exceed max health
+            if (currentHealth > characterData.MaxHealth)
+            {
+                currentHealth = characterData.MaxHealth;
+            }
+        }
         
     }
 }
