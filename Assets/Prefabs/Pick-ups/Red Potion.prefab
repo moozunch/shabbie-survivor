@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5705587133524649680
+--- !u!1 &514416607739733449
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,42 +8,39 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2524495452213230333}
-  - component: {fileID: 3989044129465511581}
-  - component: {fileID: 5041159341274095151}
-  - component: {fileID: 5221683995860106839}
-  - component: {fileID: -452889178078308790}
-  - component: {fileID: -7910552729959190224}
-  - component: {fileID: 8540454739871346471}
+  - component: {fileID: 3130416038719403435}
+  - component: {fileID: 2895658551367927805}
+  - component: {fileID: 8243432783150561725}
+  - component: {fileID: 7128801741261769467}
   m_Layer: 0
-  m_Name: Terrain Sprite Sheet_3
-  m_TagString: Prop
+  m_Name: Red Potion
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2524495452213230333
+--- !u!4 &3130416038719403435
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5705587133524649680}
+  m_GameObject: {fileID: 514416607739733449}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -2.9930003, y: -1.2377529, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &3989044129465511581
+--- !u!212 &2895658551367927805
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5705587133524649680}
+  m_GameObject: {fileID: 514416607739733449}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -75,59 +72,27 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -841164523
-  m_SortingLayer: 2
+  m_SortingLayerID: 1161074925
+  m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 192319743, guid: e14884199b84efe49a1281afcc76bf95, type: 3}
+  m_Sprite: {fileID: -1628227131722358375, guid: 70ff60451a165b843ad0e89c894a2f05, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.375, y: 0.46875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5041159341274095151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5705587133524649680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b2cf7183f9358646b109764a3b3c5cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 10
---- !u!114 &5221683995860106839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5705587133524649680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ce37d242ca86234295746963b020f06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drops:
-  - name: Red Potion
-    dropRate: 50
-    itemPrefab: {fileID: 514416607739733449, guid: 77238444b6a6d3744bcdce9d4941316a, type: 3}
-  - name: Gems
-    dropRate: 50
-    itemPrefab: {fileID: 3699476068296400763, guid: 8008949d2613b66458c86c8bd975dcdd, type: 3}
---- !u!61 &-452889178078308790
+--- !u!61 &8243432783150561725
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5705587133524649680}
+  m_GameObject: {fileID: 514416607739733449}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -159,37 +124,24 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 0.375, y: 0.46875}
+    newSize: {x: 0.375, y: 0.46875}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.375, y: 0.46875}
   m_EdgeRadius: 0
---- !u!114 &-7910552729959190224
+--- !u!114 &7128801741261769467
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5705587133524649680}
+  m_GameObject: {fileID: 514416607739733449}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b2cf7183f9358646b109764a3b3c5cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 7993e698c2a1e0f4295a843edfdeeef5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
---- !u!114 &8540454739871346471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5705587133524649680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ce37d242ca86234295746963b020f06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drops: []
+  healthRestored: 100

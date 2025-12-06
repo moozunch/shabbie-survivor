@@ -7,8 +7,11 @@ public class EnemyStats : MonoBehaviour
     public EnemyScriptableObject enemyData;
 
     //current stats
+    [HideInInspector]
     float currentMoveSpeed;
+    [HideInInspector]
     float currentHealth;
+    [HideInInspector]
     float currentDamage;
 
     void Awake(){
@@ -17,15 +20,27 @@ public class EnemyStats : MonoBehaviour
         currentDamage = enemyData.Damage;
     }
 
-    public void TakeDamage(float dmg){
+    public void TakeDamage(float dmg)
+    {
         currentHealth -= dmg;
 
-        if(currentHealth <= 0){
+        if(currentHealth <= 0)
+        {
             Kill();
         }
     }
 
-    public void Kill(){
+    public void Kill()
+    {
         Destroy(gameObject);
+    }
+
+    private void OnCollisionStay2D(Collision2D col)
+    {
+        if (col.gameObject.CompareTag("Player"))
+        {
+            PlayerStats player = col.gameObject.GetComponent<PlayerStats>();
+            player.TakeDamage(currentDamage);
+        }
     }
 }
