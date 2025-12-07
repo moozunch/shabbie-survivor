@@ -8,11 +8,11 @@ public class EnemyStats : MonoBehaviour
 
     //current stats
     [HideInInspector]
-    float currentMoveSpeed;
+    public float currentMoveSpeed;
     [HideInInspector]
-    float currentHealth;
+    public float currentHealth;
     [HideInInspector]
-    float currentDamage;
+    public float currentDamage;
 
     void Awake(){
         currentMoveSpeed = enemyData.MoveSpeed;
