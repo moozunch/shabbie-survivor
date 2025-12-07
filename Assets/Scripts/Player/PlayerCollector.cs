@@ -4,11 +4,30 @@ using UnityEngine;
 
 public class PlayerCollector : MonoBehaviour
 {
-   void OnTriggerEnter2D(Collider2D col)
-   {
+    PlayerStats player;
+    CircleCollider2D playerCollector;
+    public float pullSpeed;
+
+    void Start()
+    {
+        player = FindObjectOfType<PlayerStats>();
+        playerCollector = GetComponent<CircleCollider2D>();
+    }
+
+    void Update()
+    {
+        playerCollector.radius = player.currentMagnet;
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
        if(col.gameObject.TryGetComponent(out ICollectible collectible))
        {
-           collectible.Collect();
+            Rigidbody2D rb = col.gameObject.GetComponent<Rigidbody2D>();
+            Vector2 forcedDirection = (transform.position - col.transform.position).normalized;
+            rb.AddForce(forcedDirection * pullSpeed);
+
+            collectible.Collect();
        }
-   }
+    }
 }

@@ -7,11 +7,14 @@ public class PlayerStats : MonoBehaviour
     public CharacterScriptableObject characterData;
 
     // Current stats
-    float currentHealth;
-    float currentRecovery;
-    float currentMoveSpeed;
-    float currentMight;
-    float currentProjectileSpeed;
+    public float currentHealth;
+    public float currentRecovery;
+    public float currentMoveSpeed;
+    public float currentMight;
+    public float currentProjectileSpeed;
+    public float currentMagnet;
+
+    public List<GameObject> spawnedWeapons;
 
     // Experience and level of the player
     [Header("Experience/Level")]
@@ -38,12 +41,18 @@ public class PlayerStats : MonoBehaviour
 
     void Awake()
     {
+        characterData = CharacterSelector.GetData();
+        CharacterSelector.instance.DestroySingleton();
+
         // Initialize stats from ScriptableObject
         currentHealth = characterData.MaxHealth;
         currentRecovery = characterData.RecoveredHealth;
         currentMoveSpeed = characterData.MoveSpeed;
         currentMight = characterData.Might;
         currentProjectileSpeed = characterData.ProjectileSpeed;
+        currentMagnet = characterData.Magnet;
+
+        SpawnedWeapon(characterData.StartingWeapon);
     }
     // Start is called before the first frame update
     void Start()
@@ -63,6 +72,8 @@ public class PlayerStats : MonoBehaviour
         {
             isInvincible = false;
         }
+
+        Recover();
     }
     
 
@@ -133,4 +144,26 @@ public class PlayerStats : MonoBehaviour
         }
         
     }
-}
+
+    void Recover()
+    { 
+      // recover health over time
+        if (currentHealth < characterData.MaxHealth)
+        {
+            currentHealth += currentRecovery * Time.deltaTime;
+            // make sure current health does not exceed max health
+            if (currentHealth > characterData.MaxHealth)
+            {
+                currentHealth = characterData.MaxHealth;
+            }
+        }
+    }
+
+    public void SpawnedWeapon(GameObject weapon)
+    {
+        GameObject spawnedWeapon = Instantiate(weapon, transform.position, Quaternion.identity);
+        spawnedWeapon.transform.SetParent(transform);
+        spawnedWeapons.Add(spawnedWeapon);
+    }
+
+ }
