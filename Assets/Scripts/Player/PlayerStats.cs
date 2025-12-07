@@ -14,7 +14,10 @@ public class PlayerStats : MonoBehaviour
     public float currentProjectileSpeed;
     public float currentMagnet;
 
-    public List<GameObject> spawnedWeapons;
+    // Inventory
+    public InventoryManager inventoryManager;
+    public int weaponIndex;
+    public int passiveItemIndex;
 
     // Experience and level of the player
     [Header("Experience/Level")]
@@ -44,6 +47,8 @@ public class PlayerStats : MonoBehaviour
         characterData = CharacterSelector.GetData();
         CharacterSelector.instance.DestroySingleton();
 
+        inventoryManager = GetComponent<InventoryManager>();
+
         // Initialize stats from ScriptableObject
         currentHealth = characterData.MaxHealth;
         currentRecovery = characterData.RecoveredHealth;
@@ -57,14 +62,15 @@ public class PlayerStats : MonoBehaviour
         {
             currentMight = 1;
         }
-
-        SpawnedWeapon(characterData.StartingWeapon);
     }
     // Start is called before the first frame update
     void Start()
     {
         // Set initial experience cap based on level ranges
         experienceCap = levelRanges[0].experienceCapIncrease;
+        
+        // Spawn starting weapon after InventoryManager is initialized
+        SpawnedWeapon(characterData.StartingWeapon);
     }
 
     void Update()
@@ -167,9 +173,23 @@ public class PlayerStats : MonoBehaviour
 
     public void SpawnedWeapon(GameObject weapon)
     {
+        // Check if weapon slots are full
+        if (weaponIndex >= inventoryManager.weaponSlots.Count)
+        {
+            Debug.LogError("Weapon inventory is full!");
+            return;
+        }
+
+        // Spawn weapon
         GameObject spawnedWeapon = Instantiate(weapon, transform.position, Quaternion.identity);
         spawnedWeapon.transform.SetParent(transform);
-        spawnedWeapons.Add(spawnedWeapon);
+        
+        // Add to inventory
+        WeaponController weaponController = spawnedWeapon.GetComponent<WeaponController>();
+        inventoryManager.AddWeapon(weaponIndex, weaponController);
+        
+        // Increment weapon index for next weapon
+        weaponIndex++;
     }
 
  }
