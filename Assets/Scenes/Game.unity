@@ -943,6 +943,7 @@ GameObject:
   - component: {fileID: 1901997116}
   - component: {fileID: 1901997117}
   - component: {fileID: 1901997118}
+  - component: {fileID: 1901997119}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1190,10 +1191,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4d342622eac2c48aa0d8ddf352a619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponSlots: []
+  weaponSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   weaponLevels: 000000000000000000000000000000000000000000000000
-  passiveItemSlots: []
+  passiveItemSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   passiveItemLevels: 000000000000000000000000000000000000000000000000
+--- !u!114 &1901997119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901997109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9deb374ce545244f955346cc387d65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1917143162
 GameObject:
   m_ObjectHideFlags: 0

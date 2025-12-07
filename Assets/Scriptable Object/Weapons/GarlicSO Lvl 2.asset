@@ -9,9 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebae198d64b7dca49bc60673bb5aad10, type: 3}
-  m_Name: ShoesPassiveItem
+  m_Script: {fileID: 11500000, guid: bbc080b208a8f42b39286e3a85a2fcab, type: 3}
+  m_Name: GarlicSO Lvl 2
   m_EditorClassIdentifier: 
-  level: 0
-  nextLevelPrefab: {fileID: 191996674782487499, guid: 3c8c0600e02ea0849a1c47f22b168927, type: 3}
-  multiplier: 50
+  prefab: {fileID: 8029913368421661984, guid: 48c8bebcffa8b4cc08aa108bb153fb96, type: 3}
+  damage: 5
+  speed: 0
+  cooldownDuration: 3
+  pierce: 0

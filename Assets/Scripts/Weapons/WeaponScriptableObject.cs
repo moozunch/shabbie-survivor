@@ -6,6 +6,14 @@ using UnityEngine;
 public class WeaponScriptableObject : ScriptableObject
 {
     [SerializeField]
+    int level;
+    public int Level { get => level; private set => level = value;}
+
+    [SerializeField]
+    GameObject nextLevelPrefab;
+    public GameObject NextLevelPrefab { get => nextLevelPrefab; private set => nextLevelPrefab = value;}
+
+    [SerializeField]
     public GameObject prefab;
     public GameObject Prefab { get => prefab; private set => prefab = value;}
 

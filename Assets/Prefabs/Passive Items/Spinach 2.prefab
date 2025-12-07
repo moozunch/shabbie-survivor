@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 53121702665078818}
   - component: {fileID: 586122148823768426}
   m_Layer: 0
-  m_Name: Spinach
+  m_Name: Spinach 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,4 +97,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208f85117ba0d746a3cb76817db165d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passiveItemData: {fileID: 11400000, guid: 8d3f6b90257f9d84dbad41b2ac283d3b, type: 2}
+  passiveItemData: {fileID: 11400000, guid: 4a63bc3512bc8254a9fcae2a8bcf1b68, type: 2}

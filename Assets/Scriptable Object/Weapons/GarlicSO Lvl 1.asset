@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc080b208a8f42b39286e3a85a2fcab, type: 3}
+  m_Name: GarlicSO Lvl 1
+  m_EditorClassIdentifier: 
+  level: 0
+  nextLevelPrefab: {fileID: 4616825368250036261, guid: 44996eb63baddec4892fd6597ed70449, type: 3}
+  prefab: {fileID: 8029913368421661984, guid: 48c8bebcffa8b4cc08aa108bb153fb96, type: 3}
+  damage: 5
+  speed: 0
+  cooldownDuration: 3
+  pierce: 0

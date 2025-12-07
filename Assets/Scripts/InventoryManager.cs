@@ -34,11 +34,57 @@ public class InventoryManager : MonoBehaviour
 
     public void LevelUpWeapon(int slotIndex)
     {
-        // Logic untuk level up weapon akan diimplementasikan nanti
+        if (weaponSlots[slotIndex] != null)
+        {
+            WeaponController weapon = weaponSlots[slotIndex];
+            
+            // Check if there's a next level prefab
+            if (weapon.weaponData.NextLevelPrefab != null)
+            {
+                GameObject upgradedWeapon = Instantiate(weapon.weaponData.NextLevelPrefab, weapon.transform.position, Quaternion.identity);
+                upgradedWeapon.transform.SetParent(weapon.transform.parent);
+                
+                // Add upgraded weapon to same slot
+                WeaponController weaponController = upgradedWeapon.GetComponent<WeaponController>();
+                AddWeapon(slotIndex, weaponController);
+                
+                // Destroy old weapon
+                Destroy(weapon.gameObject);
+                
+                Debug.Log($"Weapon in slot {slotIndex} leveled up to level {weaponLevels[slotIndex]}");
+            }
+            else
+            {
+                Debug.LogWarning($"Weapon in slot {slotIndex} has no next level prefab!");
+            }
+        }
     }
 
     public void LevelUpPassiveItem(int slotIndex)
     {
-        // Logic untuk level up passive item akan diimplementasikan nanti
+        if (passiveItemSlots[slotIndex] != null)
+        {
+            PassiveItem item = passiveItemSlots[slotIndex];
+            
+            // Check if there's a next level prefab
+            if (item.passiveItemData.NextLevelPrefab != null)
+            {
+                GameObject upgradedItem = Instantiate(item.passiveItemData.NextLevelPrefab, item.transform.position, Quaternion.identity);
+                upgradedItem.transform.SetParent(item.transform.parent);
+                
+                // Add upgraded item to same slot
+                PassiveItem passiveItemController = upgradedItem.GetComponent<PassiveItem>();
+                AddPassiveItem(slotIndex, passiveItemController);
+                
+                // Destroy old item
+                Destroy(item.gameObject);
+                
+                Debug.Log($"Passive item in slot {slotIndex} leveled up to level {passiveItemLevels[slotIndex]}");
+            }
+            else
+            {
+                Debug.LogWarning($"Passive item in slot {slotIndex} has no next level prefab!");
+            }
+        }
     }
 }
