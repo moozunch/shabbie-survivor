@@ -142,6 +142,12 @@ public class PlayerStats : MonoBehaviour
     public void Kill()
     {
         Debug.Log("Player Is DEAD");
+
+        // Baris ini yang akan menyuruh GameManager untuk memberhentikan waktu
+        GameManager.instance.TriggerGameOver();
+
+        // (Opsional) Hancurkan player biar visualnya hilang
+        Destroy(gameObject); 
     }
 
     public void RestoreHealth(float amount)
@@ -237,4 +243,5 @@ public class PlayerStats : MonoBehaviour
         Debug.Log($"Registered {existingItems.Length} existing passive items to inventory");
     }
 
- }
+    
+}

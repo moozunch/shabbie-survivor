@@ -32,7 +32,7 @@ public class MapController : MonoBehaviour
     void Update()
     {
         ChunkChecker();
-        ChunkOptimizater();
+        ChunkOptimizer();
     }
 
     void ChunkChecker()
@@ -125,7 +125,7 @@ public class MapController : MonoBehaviour
     }
 
     //supaya bergerak + 50 jd nggak kelihatan loading dan yang belakang itu dihapus supaya nggak berat processing power
-    void ChunkOptimizater()
+    void ChunkOptimizer()
     {
         optimezerCooldown -= Time.deltaTime;
         if (optimezerCooldown < 0f)
