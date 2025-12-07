@@ -6,7 +6,7 @@ public class EnemyStats : MonoBehaviour
 {
     public EnemyScriptableObject enemyData;
 
-    //current stats
+    // Current stats
     [HideInInspector]
     public float currentMoveSpeed;
     [HideInInspector]
@@ -17,7 +17,10 @@ public class EnemyStats : MonoBehaviour
     public float despawnDistance = 20f;
     Transform player;
 
-    void Awake(){
+    EnemySpawner es; // Variabel Global
+
+    void Awake()
+    {
         currentMoveSpeed = enemyData.MoveSpeed;
         currentHealth = enemyData.MaxHealth;
         currentDamage = enemyData.Damage;
@@ -25,11 +28,14 @@ public class EnemyStats : MonoBehaviour
 
     void Start()
     {
+        // Cache referensi di awal game biar ringan
+        es = FindObjectOfType<EnemySpawner>();
         player = FindObjectOfType<PlayerStats>().transform;
     }
 
     void Update()
     {
+        // Cek jarak untuk respawn (looping map)
         if (Vector2.Distance(transform.position, player.position) >= despawnDistance)
         {
             ReturnEnemy();
@@ -40,7 +46,7 @@ public class EnemyStats : MonoBehaviour
     {
         currentHealth -= dmg;
 
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         {
             Kill();
         }
@@ -55,20 +61,28 @@ public class EnemyStats : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Player"))
         {
-            PlayerStats player = col.gameObject.GetComponent<PlayerStats>();
-            player.TakeDamage(currentDamage);
+            PlayerStats playerStats = col.gameObject.GetComponent<PlayerStats>();
+            playerStats.TakeDamage(currentDamage);
         }
     }
 
     private void OnDestroy()
     {
-        EnemySpawner es = FindObjectOfType<EnemySpawner>();
-        es.OnEnemyKilled();
+        // FIX ERROR: Cek null dulu. Kalau game stop, es mungkin sudah hilang duluan.
+        if (es != null)
+        {
+            es.OnEnemyKilled();
+        }
     }
 
     void ReturnEnemy()
-    { 
-        EnemySpawner es = FindObjectOfType<EnemySpawner>();
-        transform.position = player.position + es.relativeSpawnPoints[Random.Range(0, es.relativeSpawnPoints.Count)].position;
+    {
+        // SAFETY CHECK: Pastikan es tidak null sebelum mengakses list spawn points
+        if (es == null) return;
+
+        // LOGIC FIX: Gunakan .localPosition, bukan .position
+        // Karena kita menambahkan offset relatif terhadap posisi player
+        Transform randomPoint = es.relativeSpawnPoints[Random.Range(0, es.relativeSpawnPoints.Count)];
+        transform.position = player.position + randomPoint.localPosition;
     }
 }
