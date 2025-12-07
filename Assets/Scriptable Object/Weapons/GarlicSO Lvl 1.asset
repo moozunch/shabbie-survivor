@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc080b208a8f42b39286e3a85a2fcab, type: 3}
   m_Name: GarlicSO Lvl 1
   m_EditorClassIdentifier: 
+  icon: {fileID: 1952178598, guid: e1a607f41cb6e498fbb94943b2c6bc56, type: 3}
   level: 0
   nextLevelPrefab: {fileID: 4616825368250036261, guid: 44996eb63baddec4892fd6597ed70449, type: 3}
   prefab: {fileID: 8029913368421661984, guid: 48c8bebcffa8b4cc08aa108bb153fb96, type: 3}

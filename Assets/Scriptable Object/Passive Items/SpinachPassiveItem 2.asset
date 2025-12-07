@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebae198d64b7dca49bc60673bb5aad10, type: 3}
   m_Name: SpinachPassiveItem 2
   m_EditorClassIdentifier: 
+  icon: {fileID: 439392696399361897, guid: 7b5f1007939d3684f9e66bfe26ddf249, type: 3}
   level: 0
   nextLevelPrefab: {fileID: 0}
   multiplier: 200

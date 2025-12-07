@@ -6,6 +6,10 @@ using UnityEngine;
 public class WeaponScriptableObject : ScriptableObject
 {
     [SerializeField]
+    Sprite icon;
+    public Sprite Icon { get => icon; private set => icon = value;}
+
+    [SerializeField]
     int level;
     public int Level { get => level; private set => level = value;}
 

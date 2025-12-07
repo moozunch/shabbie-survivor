@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebae198d64b7dca49bc60673bb5aad10, type: 3}
   m_Name: ShoesPassiveItem
   m_EditorClassIdentifier: 
+  icon: {fileID: -3863502836797267595, guid: 7b5f1007939d3684f9e66bfe26ddf249, type: 3}
   level: 0
   nextLevelPrefab: {fileID: 191996674782487499, guid: 3c8c0600e02ea0849a1c47f22b168927, type: 3}
   multiplier: 50

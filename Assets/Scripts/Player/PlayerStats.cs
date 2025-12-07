@@ -71,6 +71,9 @@ public class PlayerStats : MonoBehaviour
         
         // Spawn starting weapon after InventoryManager is initialized
         SpawnedWeapon(characterData.StartingWeapon);
+        
+        // Auto-register existing passive items that are already children of Player
+        RegisterExistingPassiveItems();
     }
 
     void Update()
@@ -190,6 +193,48 @@ public class PlayerStats : MonoBehaviour
         
         // Increment weapon index for next weapon
         weaponIndex++;
+    }
+
+    public void SpawnedPassiveItem(GameObject passiveItem)
+    {
+        // Check if passive item slots are full
+        if (passiveItemIndex >= inventoryManager.passiveItemSlots.Count)
+        {
+            Debug.LogError("Passive item inventory is full!");
+            return;
+        }
+
+        // Spawn passive item
+        GameObject spawnedItem = Instantiate(passiveItem, transform.position, Quaternion.identity);
+        spawnedItem.transform.SetParent(transform);
+        
+        // Add to inventory
+        PassiveItem passiveItemComponent = spawnedItem.GetComponent<PassiveItem>();
+        inventoryManager.AddPassiveItem(passiveItemIndex, passiveItemComponent);
+        
+        // Increment passive item index for next item
+        passiveItemIndex++;
+    }
+
+    void RegisterExistingPassiveItems()
+    {
+        // Find all passive items that are children of Player
+        PassiveItem[] existingItems = GetComponentsInChildren<PassiveItem>();
+        
+        foreach (PassiveItem item in existingItems)
+        {
+            if (passiveItemIndex >= inventoryManager.passiveItemSlots.Count)
+            {
+                Debug.LogError("Passive item inventory is full!");
+                break;
+            }
+            
+            // Add existing passive item to inventory
+            inventoryManager.AddPassiveItem(passiveItemIndex, item);
+            passiveItemIndex++;
+        }
+        
+        Debug.Log($"Registered {existingItems.Length} existing passive items to inventory");
     }
 
  }

@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc080b208a8f42b39286e3a85a2fcab, type: 3}
   m_Name: KnifeSO Lvl 1
   m_EditorClassIdentifier: 
+  icon: {fileID: -1889975247, guid: e1a607f41cb6e498fbb94943b2c6bc56, type: 3}
+  level: 0
+  nextLevelPrefab: {fileID: 8605025775859557162, guid: 7f741dbe557a0b842a80645be9865a13, type: 3}
   prefab: {fileID: 952470251525635703, guid: a04814b9daf754ecdbcb1a5691cc6036, type: 3}
   damage: 5
   speed: 10
