@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbc080b208a8f42b39286e3a85a2fcab, type: 3}
   m_Name: OrbSO Lvl1
   m_EditorClassIdentifier: 
-  icon: {fileID: 592121401, guid: e1a607f41cb6e498fbb94943b2c6bc56, type: 3}
+  icon: {fileID: 173782316, guid: e1a607f41cb6e498fbb94943b2c6bc56, type: 3}
   level: 0
   nextLevelPrefab: {fileID: 0}
   prefab: {fileID: 7389487021232840556, guid: 8f307b9e1160c164b960626d788d4421, type: 3}

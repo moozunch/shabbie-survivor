@@ -16,8 +16,10 @@ public class EnemyStats : MonoBehaviour
 
     public float despawnDistance = 20f;
     Transform player;
+    EnemySpawner es; 
 
-    EnemySpawner es; // Variabel Global
+    // --- TAMBAHAN UNTUK SHADER ---
+    private SpriteRenderer sr; 
 
     void Awake()
     {
@@ -28,14 +30,19 @@ public class EnemyStats : MonoBehaviour
 
     void Start()
     {
-        // Cache referensi di awal game biar ringan
         es = FindObjectOfType<EnemySpawner>();
-        player = FindObjectOfType<PlayerStats>().transform;
+        // Fix pencarian Player (jika player mati, ini bisa null, jadi hati-hati)
+        PlayerStats pStats = FindObjectOfType<PlayerStats>();
+        if(pStats != null) player = pStats.transform;
+
+        // Ambil komponen Sprite Renderer agar bisa akses Material
+        sr = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        // Cek jarak untuk respawn (looping map)
+        if (player == null) return; // Safety check
+
         if (Vector2.Distance(transform.position, player.position) >= despawnDistance)
         {
             ReturnEnemy();
@@ -46,10 +53,31 @@ public class EnemyStats : MonoBehaviour
     {
         currentHealth -= dmg;
 
+        // --- TRIGGER ANIMASI SHADER DISINI ---
+        // Panggil efek kedap-kedip setiap kali kena damage
+        if (sr != null)
+        {
+            StartCoroutine(FlashRoutine());
+        }
+
         if (currentHealth <= 0)
         {
             Kill();
         }
+    }
+
+    // --- LOGIKA ANIMASI SHADER ---
+    IEnumerator FlashRoutine()
+    {
+        // 1. Ubah parameter shader '_FlashAmount' jadi 1 (Merah Full)
+        // Kita akses .material untuk membuat instance unik buat musuh ini saja
+        sr.material.SetFloat("_FlashAmount", 1f);
+
+        // 2. Tunggu sebentar (0.1 detik)
+        yield return new WaitForSeconds(0.1f);
+
+        // 3. Kembalikan ke 0 (Warna Normal)
+        sr.material.SetFloat("_FlashAmount", 0f);
     }
 
     public void Kill()
@@ -62,13 +90,12 @@ public class EnemyStats : MonoBehaviour
         if (col.gameObject.CompareTag("Player"))
         {
             PlayerStats playerStats = col.gameObject.GetComponent<PlayerStats>();
-            playerStats.TakeDamage(currentDamage);
+            if(playerStats != null) playerStats.TakeDamage(currentDamage);
         }
     }
 
     private void OnDestroy()
     {
-        // FIX ERROR: Cek null dulu. Kalau game stop, es mungkin sudah hilang duluan.
         if (es != null)
         {
             es.OnEnemyKilled();
@@ -77,11 +104,7 @@ public class EnemyStats : MonoBehaviour
 
     void ReturnEnemy()
     {
-        // SAFETY CHECK: Pastikan es tidak null sebelum mengakses list spawn points
         if (es == null) return;
-
-        // LOGIC FIX: Gunakan .localPosition, bukan .position
-        // Karena kita menambahkan offset relatif terhadap posisi player
         Transform randomPoint = es.relativeSpawnPoints[Random.Range(0, es.relativeSpawnPoints.Count)];
         transform.position = player.position + randomPoint.localPosition;
     }
