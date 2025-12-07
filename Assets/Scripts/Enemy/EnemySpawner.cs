@@ -8,131 +8,210 @@ public class EnemySpawner : MonoBehaviour
     public class Wave
     {
         public string waveName;
-        public List<EnemyGroup> enemyGroups; // A list og froup of enemies to spawn in this wave
-        public int waveQuota; //the total number of enemies to spawn in this wave
-        public float spawnInterval; //the interval at which to spawn enemies
-        public int spawnCount; //the number of enemies spawned so far in this wave
+        public List<EnemyGroup> enemyGroups; 
+        public int waveQuota; 
+        public float spawnInterval; 
+        public int spawnCount; 
     }
 
     [System.Serializable]
     public class EnemyGroup
     {
         public string enemyName;
-        public int enemyCount; //number of each enemy type in this group
-        public float spawnCount;
-        public GameObject enemyPrefabs; //list of enemy prefabs in this group
+        public int enemyCount; 
+        public int spawnCount; // UBAH: float ke int biar konsisten
+        public GameObject enemyPrefabs; 
     }
 
-    public List<Wave> waves; //list of waves in the game
-    public int currentWaveCount; //index of the current wave, iingat selalu mulati dari 0
+    public List<Wave> waves; // List ini akan diisi otomatis oleh script
+    public int currentWaveCount; 
 
-    Transform player;
+    [Header("Procedural Settings")]
+    public GameObject enemyPrefab; // DRAG PREFAB BAT KE SINI
+    public int totalWaves = 10; // Total wave yang diinginkan
+    public int baseEnemyCount = 10; // Jumlah musuh di wave 1
+    public float enemyMultiplier = 1.2f; // Tiap wave musuh dikali 1.2
+    public float baseSpawnInterval = 1f; // Jeda antar spawn musuh
 
     [Header("Spawner Attributes")]
-    float spawnTimer; //timer to track spawn intervals, when to spawn next enemy
-    public int enemiesAlive; //to check if there are enemies alive
-    public int maxEnemiesAllowed; //max number of enemies allowed to be alive at once
+    float spawnTimer; 
+    public int enemiesAlive; 
+    public int maxEnemiesAllowed = 100; 
     public bool maxEnemiesReached = false;
-    public float waveInterval; //interval between waves
-
+    public float waveInterval = 3f; // Jeda antar wave
+    bool isWaveTransitioning = false; // Flag biar gak error double call next wave
 
     [Header("Spawn Position")]
-    public List<Transform> relativeSpawnPoints; //a list to store all the relative spawn points to the player
-
+    public List<Transform> relativeSpawnPoints; 
+    Transform player;
 
     void Start()
     {
-        player = FindObjectOfType<PlayerStats>().transform;
+        // 1. Cari Player
+        PlayerStats playerStats = FindObjectOfType<PlayerStats>();
+        if (playerStats != null)
+        {
+            player = playerStats.transform;
+        }
+        else
+        {
+            Debug.LogError("Player tidak ditemukan! Pastikan ada PlayerStats di scene.");
+            return; 
+        }
+
+        // 2. Cek Spawn Points (Biar gak error kalau kosong)
+        if (relativeSpawnPoints == null || relativeSpawnPoints.Count == 0)
+        {
+            GenerateAutoSpawnPoints();
+        }
+
+        // 3. Generate Waves secara Prosedural
+        GenerateProceduralWaves();
+
+        // 4. Hitung Quota Wave 1
         CalculateWaveQuota();
     }
 
-    // Update is called once per frame
+    // Fungsi baru untuk membuat data wave secara otomatis
+    void GenerateProceduralWaves()
+    {
+        waves = new List<Wave>(); // Reset list
+
+        for (int i = 0; i < totalWaves; i++)
+        {
+            Wave newWave = new Wave();
+            newWave.waveName = "Wave " + (i + 1);
+            newWave.spawnInterval = baseSpawnInterval;
+            newWave.spawnCount = 0;
+
+            // Buat grup musuh (Bat)
+            EnemyGroup newGroup = new EnemyGroup();
+            newGroup.enemyName = enemyPrefab.name;
+            newGroup.enemyPrefabs = enemyPrefab;
+            newGroup.spawnCount = 0;
+
+            // Rumus kenaikan jumlah musuh: Base * (Multiplier pangkat Wave)
+            // Contoh: Wave 0 = 10, Wave 1 = 12, Wave 2 = 14, dst.
+            newGroup.enemyCount = Mathf.RoundToInt(baseEnemyCount * Mathf.Pow(enemyMultiplier, i));
+
+            newWave.enemyGroups = new List<EnemyGroup>();
+            newWave.enemyGroups.Add(newGroup);
+
+            waves.Add(newWave);
+        }
+    }
+
+    // Fungsi biar gak error kalau lupa naruh SpawnPoint di Inspector
+    void GenerateAutoSpawnPoints()
+    {
+        relativeSpawnPoints = new List<Transform>();
+        GameObject spawnParent = new GameObject("AutoSpawnPoints");
+        spawnParent.transform.parent = transform;
+
+        // Bikin 8 titik melingkar di sekitar player
+        int points = 8;
+        float radius = 10f; // Jarak dari player
+        for (int i = 0; i < points; i++)
+        {
+            float angle = i * Mathf.PI * 2 / points;
+            Vector3 pos = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
+            
+            GameObject p = new GameObject("Point " + i);
+            p.transform.parent = spawnParent.transform;
+            p.transform.localPosition = pos;
+            relativeSpawnPoints.Add(p.transform);
+        }
+    }
+
     void Update()
     {
-
-        if (currentWaveCount < waves.Count && waves[currentWaveCount].spawnCount == 0) //check if the current wave is completedn and next wave should start
+        // Cek apakah wave selesai (Spawn sudah penuh DAN Quota terpenuhi)
+        // Dan pastikan tidak sedang transisi ke wave berikutnya
+        if (currentWaveCount < waves.Count 
+            && waves[currentWaveCount].spawnCount >= waves[currentWaveCount].waveQuota 
+            && !isWaveTransitioning)
         {
             StartCoroutine(BeginNextWave());
         }
 
         spawnTimer += Time.deltaTime;
-        //check if it's time to spawn enemies based on the spawn interval
+
         if (spawnTimer >= waves[currentWaveCount].spawnInterval)
         {
-            spawnTimer = 0f; //reset the timer after spawning enemies
+            spawnTimer = 0f;
             SpawnEnemeies();
         }
     }
 
-    //couroutine to begin the next wave after a delay, gunanya asynchronous
     IEnumerator BeginNextWave()
     {
-        yield return new WaitForSeconds(waveInterval); //wait for the specified interval before starting the next wave
+        isWaveTransitioning = true; // Kunci biar gak kepanggil berkali-kali
 
-        //If there are more waves to spawn after the current wave, move on to the next wave
+        yield return new WaitForSeconds(waveInterval); 
+
         if (currentWaveCount < waves.Count - 1)
         {
-            currentWaveCount++; //increment the wave count to move to the next wave
-            CalculateWaveQuota(); //recalculate the wave quota for the new wave
+            currentWaveCount++; 
+            CalculateWaveQuota(); 
+            Debug.Log("Starting Wave: " + (currentWaveCount + 1));
         }
+        
+        isWaveTransitioning = false; // Buka kunci
     }
 
     void CalculateWaveQuota()
     {
-        int currentWaveQuota = 0; //reset to 0
+        int currentWaveQuota = 0; 
         foreach (var enemyGroup in waves[currentWaveCount].enemyGroups)
         {
             currentWaveQuota += enemyGroup.enemyCount;
         }
         waves[currentWaveCount].waveQuota = currentWaveQuota;
-        Debug.LogWarning(currentWaveQuota);
+        Debug.Log("Wave " + (currentWaveCount+1) + " Quota: " + currentWaveQuota);
     }
 
-
-    //this method will stop spawning enemies when the max number of enemies alive is reached
-    //the method will only spawn enemies in a particular wave until it is time for the next wave's enemies to spawn
     void SpawnEnemeies()
     {
-        //check if the minmum number of enemies for the wave has been spawned
         if (waves[currentWaveCount].spawnCount < waves[currentWaveCount].waveQuota && !maxEnemiesReached)
         {
-            //spawn each type of enemy until the quota is filled
             foreach (var enemyGroup in waves[currentWaveCount].enemyGroups)
             {
-                //checked if the minimum number of enemies of this type have been spawned
                 if (enemyGroup.spawnCount < enemyGroup.enemyCount)
                 {
                     if (enemiesAlive >= maxEnemiesAllowed)
                     {
                         maxEnemiesReached = true;
-                        return; //exit the function if the max number of enemies is reached
+                        return; 
                     }
                     else
                     {
                         maxEnemiesReached = false;
                     }
 
-                    //spawn the enemy at a random spawn point but relative close to player
-                    Instantiate(enemyGroup.enemyPrefabs, player.position + relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)].position, Quaternion.identity);
+                    // Pilih posisi random dari list spawn point
+                    Transform randomPoint = relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)];
+                    
+                    // Spawn Musuh
+                    Instantiate(enemyGroup.enemyPrefabs, player.position + randomPoint.localPosition, Quaternion.identity);
 
-                    enemyGroup.spawnCount++; //increment the spawn count for this enemy type to keep track emang udah bertambah
-                    waves[currentWaveCount].spawnCount++; //increment the total spawn count for the wave
-                    enemiesAlive++; //increment the total number of enemies alive in the scene
+                    enemyGroup.spawnCount++; 
+                    waves[currentWaveCount].spawnCount++; 
+                    enemiesAlive++; 
+                    
+                    // Break biar gak spawn semua tipe sekaligus dalam 1 frame (opsional)
+                    break; 
                 }
             }
         }
 
-        //reset maxEnemiesReached flag if the number of enemies alive is below the maximum limit
         if (enemiesAlive < maxEnemiesAllowed)
         {
             maxEnemiesReached = false;
         }
     }
 
-    //call this  method when an enemy is killed to decrement the number of enemies alive
     public void OnEnemyKilled()
     {
-        enemiesAlive--; //decrement the number of enemies alive when an enemy is killed
+        enemiesAlive--; 
     }
-
 }

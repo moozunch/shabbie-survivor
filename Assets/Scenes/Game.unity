@@ -715,6 +715,11 @@ MonoBehaviour:
     spawnInterval: 1
     spawnCount: 0
   currentWaveCount: 0
+  enemyPrefab: {fileID: 5492110463160354900, guid: 22604e3c65ac3408ca55f229fb688def, type: 3}
+  totalWaves: 10
+  baseEnemyCount: 10
+  enemyMultiplier: 1.2
+  baseSpawnInterval: 0.1
   enemiesAlive: 0
   maxEnemiesAllowed: 10
   maxEnemiesReached: 0
