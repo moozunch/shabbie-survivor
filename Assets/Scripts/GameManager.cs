@@ -6,6 +6,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    // Referensi ke UI Game Over (Drag Panel Game Over ke sini di Inspector)
+    [Header("UI References")]
+    public GameObject gameOverUI;
+
     // Enum untuk status permainan
     public enum GameState
     {
@@ -14,9 +18,7 @@ public class GameManager : MonoBehaviour
         GameOver
     }
 
-    // Menyimpan status permainan saat ini
     public GameState currentState;
-    // Menyimpan status permainan sebelumnya
     public GameState previousState;
 
     void Awake()
@@ -25,11 +27,23 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            // Hati-hati dengan DontDestroyOnLoad jika UI ada di scene yang berbeda, 
+            // referensi UI bisa hilang saat reload scene.
+            // Untuk skenario simpel, ini oke.
+            // DontDestroyOnLoad(gameObject); 
         }
         else
         {
             Destroy(gameObject);
+        }
+
+        // Pastikan waktu berjalan normal saat game mulai/restart
+        Time.timeScale = 1f;
+
+        // Sembunyikan UI Game Over saat mulai
+        if (gameOverUI != null)
+        {
+            gameOverUI.SetActive(false);
         }
 
         // Set initial state
@@ -38,19 +52,17 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // Mendefinisikan logika berdasarkan status permainan saat ini
         switch (currentState)
         {
             case GameState.Gameplay:
-                // Logika untuk mode gameplay
                 CheckForPauseAndResume();
                 break;
             case GameState.Paused:
-                // Logika untuk mode pause
                 CheckForPauseAndResume();
                 break;
             case GameState.GameOver:
-                // Logika untuk mode game over
+                // Di sini kita tidak memanggil CheckForPauseAndResume
+                // Supaya player tidak bisa mem-pause saat sudah Game Over
                 break;
             default:
                 Debug.LogError("Unknown game state: " + currentState);
@@ -69,7 +81,7 @@ public class GameManager : MonoBehaviour
         {
             previousState = currentState;
             ChangeState(GameState.Paused);
-            Time.timeScale = 0f; // Menghentikan waktu dalam permainan
+            Time.timeScale = 0f;
             Debug.Log("Game Paused");
         }
     }
@@ -79,12 +91,26 @@ public class GameManager : MonoBehaviour
         if (currentState == GameState.Paused)
         {
             ChangeState(previousState);
-            Time.timeScale = 1f; // Melanjutkan waktu dalam permainan
+            Time.timeScale = 1f;
             Debug.Log("Game Resumed");
         }
     }
 
-    // Memeriksa input untuk pause dan resume
+    // --- FUNGSI BARU UNTUK GAME OVER ---
+    public void TriggerGameOver()
+    {
+        // Cek agar fungsi ini tidak dipanggil berkali-kali
+        if (currentState != GameState.GameOver)
+        {
+            ChangeState(GameState.GameOver);
+            Time.timeScale = 0f; // Hentikan permainan
+            Debug.Log("GAME OVER!");
+
+            // Tampilkan layar Game Over
+           
+        }
+    }
+
     void CheckForPauseAndResume()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
