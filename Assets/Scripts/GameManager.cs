@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 // menyimpan status permainan sebelumnya
   public GameState previousState;
 
-  void update()
+  void Update()
   {
     // mendefinisikan logika berdasarkan status permainan saat ini
     switch (currentState)
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 
   public void PauseGame()
   {
-    if (currentState == GameState.Paused)
+    if (currentState != GameState.Paused)
     {
         previousState = currentState;
         ChangeState(GameState.Paused);
