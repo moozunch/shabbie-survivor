@@ -12,9 +12,13 @@ public class PassiveItem : MonoBehaviour
         // Method ini akan di-override oleh child classes
     }
 
-    void Start()
+    void Awake()
     {
         playerStats = FindObjectOfType<PlayerStats>();
+    }
+
+    void Start()
+    {
         ApplyModifier();
     }
 }

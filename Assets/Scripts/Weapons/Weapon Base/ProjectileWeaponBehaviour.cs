@@ -5,6 +5,7 @@ using UnityEngine;
 public class ProjectileWeaponBehaviour : MonoBehaviour
 {
     public WeaponScriptableObject weaponData;
+    protected PlayerStats player;
 
     protected Vector3 direction;
     public float destroyAfterSeconds;
@@ -22,8 +23,14 @@ public class ProjectileWeaponBehaviour : MonoBehaviour
         currentPierce = weaponData.Pierce;
     }
 
+    public float GetCurrentDamage()
+    {
+        return currentDamage * player.currentMight;
+    }
+
     protected virtual void Start()
     {
+        player = FindObjectOfType<PlayerStats>();
         Destroy(gameObject, destroyAfterSeconds);
     }
 
@@ -79,14 +86,14 @@ public class ProjectileWeaponBehaviour : MonoBehaviour
         if (col.CompareTag("Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
-            enemy.TakeDamage(currentDamage);
+            enemy.TakeDamage(GetCurrentDamage());
             ReducePierce();
         }
         else if (col.CompareTag("Prop"))
         {
             if(col.gameObject.TryGetComponent(out BreakableProps breakable))
             {
-                breakable.TakeDamage(currentDamage);
+                breakable.TakeDamage(GetCurrentDamage());
                 ReducePierce();
             }
         }

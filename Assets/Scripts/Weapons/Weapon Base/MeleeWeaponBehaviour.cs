@@ -5,6 +5,7 @@ using UnityEngine;
 public class MeleeWeaponBehaviour : MonoBehaviour
 {
     public WeaponScriptableObject weaponData;
+    protected PlayerStats player;
 
     public float destroyAfterSeconds;
 
@@ -22,8 +23,14 @@ public class MeleeWeaponBehaviour : MonoBehaviour
         currentPierce = weaponData.Pierce;
     }
 
+    public float GetCurrentDamage()
+    {
+        return currentDamage * player.currentMight;
+    }
+
     protected virtual void Start()
     {
+        player = FindObjectOfType<PlayerStats>();
         Destroy(gameObject, destroyAfterSeconds);
     }
 
@@ -32,13 +39,13 @@ public class MeleeWeaponBehaviour : MonoBehaviour
         if (col.CompareTag("Enemy"))
         {
             EnemyStats enemy = col.GetComponent<EnemyStats>();
-            enemy.TakeDamage(currentDamage);
+            enemy.TakeDamage(GetCurrentDamage());
         }
         else if (col.CompareTag("Prop"))
         {
             if (col.gameObject.TryGetComponent(out BreakableProps breakable))
             {
-                breakable.TakeDamage(currentDamage);
+                breakable.TakeDamage(GetCurrentDamage());
                 
             }
         }

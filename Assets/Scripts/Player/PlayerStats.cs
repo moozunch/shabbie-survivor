@@ -52,6 +52,12 @@ public class PlayerStats : MonoBehaviour
         currentProjectileSpeed = characterData.ProjectileSpeed;
         currentMagnet = characterData.Magnet;
 
+        // Ensure currentMight is at least 1
+        if (currentMight == 0)
+        {
+            currentMight = 1;
+        }
+
         SpawnedWeapon(characterData.StartingWeapon);
     }
     // Start is called before the first frame update
