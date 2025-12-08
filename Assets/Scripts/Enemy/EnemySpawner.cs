@@ -139,7 +139,7 @@ public class EnemySpawner : MonoBehaviour
         if (spawnTimer >= waves[currentWaveCount].spawnInterval)
         {
             spawnTimer = 0f;
-            SpawnEnemeies();
+            SpawnEnemies();
         }
     }
 
@@ -170,7 +170,7 @@ public class EnemySpawner : MonoBehaviour
         Debug.Log("Wave " + (currentWaveCount+1) + " Quota: " + currentWaveQuota);
     }
 
-    void SpawnEnemeies()
+    void SpawnEnemies()
     {
         if (waves[currentWaveCount].spawnCount < waves[currentWaveCount].waveQuota && !maxEnemiesReached)
         {

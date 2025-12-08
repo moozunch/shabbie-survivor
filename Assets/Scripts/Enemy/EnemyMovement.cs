@@ -4,24 +4,47 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-    EnemyStats enemy;        // Akses statistik musuh (kecepatan, HP, damage)
-    Transform player;       // Target posisi pemain untuk dikejar
+    EnemyStats enemy;
+    Transform player;
+    
+    // Variabel untuk flip sprite (jika pakai scale untuk hadap kiri/kanan)
+    private SpriteRenderer sr;
 
     void Start()
     {
-        // Ambil komponen EnemyStats di GameObject ini
         enemy = GetComponent<EnemyStats>();
-        // Cari Player di scene lalu ambil Transform-nya untuk dijadikan target
-        player = FindObjectOfType<PlayerMovement>().transform;
+        
+        // Cari player (pastikan script PlayerStats ada di player)
+        PlayerStats pStats = FindObjectOfType<PlayerStats>();
+        if(pStats != null) player = pStats.transform;
+        
+        sr = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        // Gerakkan musuh mendekati pemain dengan kecepatan saat ini
-        transform.position = Vector2.MoveTowards(
-            transform.position,
-            player.transform.position,
-            enemy.currentMoveSpeed * Time.deltaTime
-        );
+        if (player == null) return;
+
+        // --- 1. TRANSLASI MANUAL (Pergerakan) ---
+        // Rumus: Arah = (Tujuan - Asal).normalized
+        Vector3 direction = (player.position - transform.position).normalized;
+
+        // Rumus: Posisi Baru = Posisi Lama + (Arah * Kecepatan * Waktu)
+        transform.position += direction * enemy.currentMoveSpeed * Time.deltaTime;
+
+
+        // --- 2. ROTASI/SKALA MANUAL (Hadap-hadapan) ---
+
+        if (direction.x > 0)
+        {
+            // Jalan ke Kanan -> Hadap Kanan
+            transform.localScale = new Vector3(1, 1, 1); 
+        }
+        else if (direction.x < 0)
+        {
+            // Jalan ke Kiri -> Hadap Kiri (Flip X)
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+
     }
 }
