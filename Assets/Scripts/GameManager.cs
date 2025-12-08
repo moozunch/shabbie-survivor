@@ -4,18 +4,17 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager instance; // Singleton untuk akses global
 
-    // Referensi ke UI Game Over (Drag Panel Game Over ke sini di Inspector)
     [Header("UI References")]
-    public GameObject gameOverUI;
+    public GameObject gameOverUI; // UI panel untuk Game Over
 
     // Enum untuk status permainan
     public enum GameState
     {
-        Gameplay,
-        Paused,
-        GameOver
+        Gameplay, // Mode main normal
+        Paused,   // Mode pause (Time.timeScale = 0)
+        GameOver  // Saat player mati/game selesai
     }
 
     public GameState currentState;
@@ -23,18 +22,15 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        // Singleton pattern
+        // Setup singleton agar tidak duplikat saat reload/pindah scene
         if (instance == null)
         {
             instance = this;
-            // Hati-hati dengan DontDestroyOnLoad jika UI ada di scene yang berbeda, 
-            // referensi UI bisa hilang saat reload scene.
-            // Untuk skenario simpel, ini oke.
-            // DontDestroyOnLoad(gameObject); 
+            
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(gameObject); // Hapus instance yang duplikat
         }
 
         // Pastikan waktu berjalan normal saat game mulai/restart
@@ -46,7 +42,7 @@ public class GameManager : MonoBehaviour
             gameOverUI.SetActive(false);
         }
 
-        // Set initial state
+        // Set state awal
         currentState = GameState.Gameplay;
     }
 
@@ -61,8 +57,7 @@ public class GameManager : MonoBehaviour
                 CheckForPauseAndResume();
                 break;
             case GameState.GameOver:
-                // Di sini kita tidak memanggil CheckForPauseAndResume
-                // Supaya player tidak bisa mem-pause saat sudah Game Over
+                // Jangan izinkan pause/resume saat sudah Game Over
                 break;
             default:
                 Debug.LogError("Unknown game state: " + currentState);
@@ -79,9 +74,9 @@ public class GameManager : MonoBehaviour
     {
         if (currentState != GameState.Paused)
         {
-            previousState = currentState;
-            ChangeState(GameState.Paused);
-            Time.timeScale = 0f;
+            previousState = currentState;        // Simpan state sebelumnya
+            ChangeState(GameState.Paused);       // Masuk state Paused
+            Time.timeScale = 0f;                 // Hentikan waktu
             Debug.Log("Game Paused");
         }
     }
@@ -90,8 +85,8 @@ public class GameManager : MonoBehaviour
     {
         if (currentState == GameState.Paused)
         {
-            ChangeState(previousState);
-            Time.timeScale = 1f;
+            ChangeState(previousState); // Kembali ke state sebelumnya
+            Time.timeScale = 1f;        // Lanjutkan waktu
             Debug.Log("Game Resumed");
         }
     }
@@ -99,20 +94,24 @@ public class GameManager : MonoBehaviour
     // --- FUNGSI BARU UNTUK GAME OVER ---
     public void TriggerGameOver()
     {
-        // Cek agar fungsi ini tidak dipanggil berkali-kali
+        // Cegah pemanggilan berulang
         if (currentState != GameState.GameOver)
         {
             ChangeState(GameState.GameOver);
             Time.timeScale = 0f; // Hentikan permainan
             Debug.Log("GAME OVER!");
 
-            // Tampilkan layar Game Over
-           
+            // Tampilkan panel Game Over jika referensi ada
+            if (gameOverUI != null)
+            {
+                gameOverUI.SetActive(true);
+            }
         }
     }
 
     void CheckForPauseAndResume()
     {
+        // Toggle pause/resume dengan tombol Escape
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (currentState == GameState.Paused)

@@ -12,6 +12,7 @@ public class KnifeBehaviour : ProjectileWeaponBehaviour
 
     void Update()
     {
+        // Gerakkan pisau sesuai arah yang ditentukan oleh controller
         transform.position += direction * currentSpeed * Time.deltaTime;   
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
-    //References
+    // Referensi komponen untuk animasi dan arah sprite
     Animator am;
     PlayerMovement pm;
     SpriteRenderer sr;
@@ -20,6 +20,7 @@ public class PlayerAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Jika pemain bergerak, aktifkan animasi berjalan dan cek arah sprite
         if (pm.moveDir.x != 0 || pm.moveDir.y != 0)
         {
             am.SetBool("Move", true);
@@ -33,6 +34,7 @@ public class PlayerAnimator : MonoBehaviour
     }
     void SpriteDirectionChecker()
     {
+        // Balik sprite jika bergerak ke kiri, normal jika ke kanan
         if (pm.lastHorizontalVector < 0)
         {
             sr.flipX = true;

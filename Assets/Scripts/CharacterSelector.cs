@@ -5,8 +5,8 @@ using UnityEngine;
 public class CharacterSelector : MonoBehaviour
 {
     
-    public static CharacterSelector instance;
-    public CharacterScriptableObject characterData;
+    public static CharacterSelector instance;             // Singleton untuk menyimpan pilihan karakter
+    public CharacterScriptableObject characterData;       // Data karakter yang dipilih pemain
 
     void Awake()
     {
@@ -24,17 +24,17 @@ public class CharacterSelector : MonoBehaviour
 
     public static CharacterScriptableObject GetData()
     {
-        return instance.characterData;
+        return instance.characterData; // Ambil data karakter terpilih
     }
 
     public void SelectCharacter(CharacterScriptableObject character)
     {
-        characterData = character;
+        characterData = character; // Simpan pilihan karakter
     }
 
     public void DestroySingleton()
     {
-        instance = null;
-        Destroy(gameObject);
+        instance = null;       // Reset singleton setelah masuk game
+        Destroy(gameObject);   // Hapus objek agar tidak menumpuk antar scene
     }
 }

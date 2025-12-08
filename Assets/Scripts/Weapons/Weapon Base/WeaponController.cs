@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// base script for all weapons
+// Skrip dasar untuk semua senjata: atur cooldown dan cara menyerang
 
 public class WeaponController : MonoBehaviour
 {
     [Header("Weapon Stats")]
-    public WeaponScriptableObject weaponData;
+    public WeaponScriptableObject weaponData; // Data senjata (damage, speed, cooldown, dll)
     float currentCooldown;
 
     protected PlayerMovement pm;
     [Header("Attack Input Settings")]
-    public bool useManualAttack = true; // When true, attack only on input
+    public bool useManualAttack = true; // Jika true, serang hanya saat klik kiri
 
     protected virtual void Start()
     {
@@ -27,13 +27,13 @@ public class WeaponController : MonoBehaviour
     
     protected virtual void Update()
     {
-        // Cooldown tick
+        // Hitung mundur cooldown
         if (currentCooldown > 0f)
         {
             currentCooldown -= Time.deltaTime;
         }
 
-        // Manual input: Left mouse click triggers attack if cooldown ready
+        // Mode manual: klik kiri memicu serangan jika cooldown sudah selesai
         if (useManualAttack)
         {
             if (currentCooldown <= 0f && Input.GetMouseButton(0))
@@ -43,7 +43,7 @@ public class WeaponController : MonoBehaviour
         }
         else
         {
-            // Legacy auto-attack behavior
+            // Mode otomatis: serang setiap cooldown selesai
             if (currentCooldown <= 0f)
             {
                 Attack();

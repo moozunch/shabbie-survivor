@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GarlicController : WeaponController
 {
-    // Spawn sekali saja saat game mulai (karena Garlic nempel terus)
+    // Spawn sekali saja saat game mulai (garlic menempel di pemain)
     protected override void Start()
     {
         base.Start();
@@ -20,7 +20,7 @@ public class GarlicController : WeaponController
 
     void SpawnGarlic()
     {
-        // Spawn Prefab
+        // Spawn prefab garlic dari ScriptableObject
         if (weaponData == null)
         {
             return;
@@ -31,13 +31,13 @@ public class GarlicController : WeaponController
         }
         GameObject spawnedGarlic = Instantiate(weaponData.Prefab, transform.position, Quaternion.identity, transform);
 
-        // Pastikan posisi nempel di player (Parenting)
+        // Pastikan posisi menempel di player (parenting)
         spawnedGarlic.transform.parent = transform;
 
-        // Reset posisi lokal ke 0,0,0 biar pas di tengah player
+        // Reset posisi lokal ke 0,0,0 agar berada di tengah pemain
         spawnedGarlic.transform.localPosition = Vector3.zero;
 
-        // Ensure it has a trigger collider to register overlaps
+        // Pastikan memiliki Collider2D trigger agar tabrakan terdeteksi
         var col2d = spawnedGarlic.GetComponent<Collider2D>();
         if (col2d == null)
         {

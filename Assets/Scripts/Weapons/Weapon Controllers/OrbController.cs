@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class OrbController : WeaponController
 {
-    // List untuk menyimpan bola yang sudah dimunculkan
+    // List untuk menyimpan orb yang sudah dimunculkan
     private List<GameObject> spawnedOrbs = new List<GameObject>();
 
-    // Variable pengaturan orbit
+    // Pengaturan orbit
     private float currentAngle = 0f;
-    public float rotationSpeed = 150f; // Kecepatan mengelilingi player
+    public float rotationSpeed = 150f; // Kecepatan orb mengelilingi pemain
     public float orbitRadius = 2.5f;
 
-    // --- TAMBAHAN BARU ---
+    // Putaran visual orb
     [Header("Spin Settings")]
-    public float selfRotationSpeed = 360f; // Kecepatan putar kipas (derajat per detik)
+    public float selfRotationSpeed = 360f; // Kecepatan putar visual orb (derajat per detik)
 
     protected override void Start()
     {
@@ -32,11 +32,11 @@ public class OrbController : WeaponController
     {
         if (spawnedOrbs.Count > 0)
         {
-            // 1. Update Sudut Orbit (Translasi Melingkar)
+            // 1. Update sudut orbit (gerak melingkar)
             currentAngle += rotationSpeed * Time.deltaTime;
             if (currentAngle >= 360f) currentAngle -= 360f;
 
-            // 2. Update Posisi & Rotasi Bola
+            // 2. Update posisi & rotasi orb
             UpdateOrbPositions();
         }
     }
@@ -46,7 +46,7 @@ public class OrbController : WeaponController
         foreach (var orb in spawnedOrbs) { if (orb) Destroy(orb); }
         spawnedOrbs.Clear();
 
-        // Spawn weapon
+        // Spawn satu orb dan simpan referensinya
         GameObject spawnedOrb = Instantiate(weaponData.Prefab, transform.position, Quaternion.identity, transform);
         spawnedOrbs.Add(spawnedOrb);
     }
@@ -59,7 +59,7 @@ public class OrbController : WeaponController
         {
             if (spawnedOrbs[i] != null)
             {
-                // --- A. LOGIKA ORBIT (TRANSLASI) ---
+                // --- A. Logika orbit (translasi) ---
                 float tempAngle = currentAngle + (angleStep * i);
                 float rad = tempAngle * Mathf.Deg2Rad;
 
@@ -68,9 +68,8 @@ public class OrbController : WeaponController
 
                 spawnedOrbs[i].transform.position = new Vector3(x, y, 0);
 
-                // --- B. LOGIKA KIPAS ANGIN (ROTASI MANUAL) ---
-                // Vector3.forward artinya sumbu Z (depan), 
-                // karena di 2D kita memutar gambar pada sumbu Z.
+                // --- B. Rotasi visual orb (manual) ---
+                // Vector3.forward adalah sumbu Z yang kita pakai di 2D untuk memutar sprite
                 spawnedOrbs[i].transform.Rotate(Vector3.forward * selfRotationSpeed * Time.deltaTime);
             }
         }

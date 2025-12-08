@@ -10,15 +10,15 @@ public class OrbWeaponBehaviour : MonoBehaviour
 
     protected PlayerStats player;
 
-    // Current stats (Sama seperti referensi kamu)
+    // Statistik saat ini (diambil dari weaponData)
     protected float currentDamage;
-    protected float currentSpeed; // Ini nanti dipakai untuk kecepatan putar
+    protected float currentSpeed; // Dipakai untuk kecepatan putar
     protected float currentCoolDownDuration;
-    protected float currentKnockback; // Tambahan biar bisa dorong musuh
+    protected float currentKnockback; // Besaran dorongan musuh (knockback)
 
     protected virtual void Awake()
     {
-        // Load data dari Scriptable Object saat game mulai
+        // Muat data dari ScriptableObject saat game mulai
         if (weaponData != null)
         {
             currentDamage = weaponData.Damage;
@@ -31,17 +31,16 @@ public class OrbWeaponBehaviour : MonoBehaviour
     protected virtual void Start()
     {
         player = FindObjectOfType<PlayerStats>();
-        // PENTING: Kita HAPUS baris 'Destroy(gameObject)' 
-        // karena Orb harus abadi selamanya.
+        // Orb bersifat permanen, tidak dihancurkan otomatis
     }
 
     public float GetCurrentDamage()
     {
-        // Rumus damage mengikuti contoh kamu
+        // Damage mengikuti pengganda kekuatan (might) dari pemain
         return currentDamage * player.currentMight;
     }
 
-    // Getter untuk kecepatan (supaya bisa diambil oleh Controller)
+    // Ambil nilai kecepatan untuk dipakai Controller
     public float GetCurrentSpeed()
     {
         return currentSpeed;

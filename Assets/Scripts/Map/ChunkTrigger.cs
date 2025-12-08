@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class ChunkTrigger : MonoBehaviour
 {
-    MapController mc;
-    public GameObject targetMap;
-    // Start is called before the first frame update
+    MapController mc;            // Pengendali peta dan manajemen chunk
+    public GameObject targetMap; // Chunk yang ditandai oleh trigger ini
+
     void Start()
     {
-        mc = FindObjectOfType<MapController>();
+        mc = FindObjectOfType<MapController>(); // Cari MapController di scene
     }
 
-    //masuk area trigger
+    // Saat pemain masuk area trigger, set chunk aktif ke target
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.CompareTag("Player"))
@@ -21,7 +21,7 @@ public class ChunkTrigger : MonoBehaviour
         }
     }
 
-    //keluar area trigger
+    // Saat pemain keluar area, kosongkan chunk jika yang aktif adalah target ini
     private void OnTriggerExit2D(Collider2D col)
     {
         if (col.CompareTag("Player"))

@@ -4,28 +4,28 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    public CharacterScriptableObject characterData;
+    public CharacterScriptableObject characterData; // Data karakter terpilih (stat dasar)
 
-    // Current stats
-    public float currentHealth;
-    public float currentRecovery;
-    public float currentMoveSpeed;
-    public float currentMight;
-    public float currentProjectileSpeed;
-    public float currentMagnet;
+    // Statistik saat ini (turunan dari CharacterScriptableObject)
+    public float currentHealth;            // HP saat ini
+    public float currentRecovery;          // Kecepatan pemulihan HP per detik
+    public float currentMoveSpeed;         // Kecepatan gerak
+    public float currentMight;             // Pengganda damage
+    public float currentProjectileSpeed;   // Kecepatan proyektil
+    public float currentMagnet;            // Jangkauan magnet pickup
 
-    // Inventory
-    public InventoryManager inventoryManager;
-    public int weaponIndex;
-    public int passiveItemIndex;
+    // Inventaris (senjata dan item pasif)
+    public InventoryManager inventoryManager; // Pengelola slot dan UI
+    public int weaponIndex;                   // Index slot senjata berikutnya
+    public int passiveItemIndex;              // Index slot item pasif berikutnya
 
-    // Experience and level of the player
+    // Pengalaman dan level pemain
     [Header("Experience/Level")]
-    public int experience = 0;
-    public int level = 1;
-    public int experienceCap;
+    public int experience = 0;   // Total EXP saat ini
+    public int level = 1;        // Level saat ini
+    public int experienceCap;    // Batas EXP untuk naik level
 
-    // class for defining level ranges and experience cap increases
+        // Kelas untuk mendefinisikan rentang level dan peningkatan cap EXP
     [System.Serializable]
     public class LevelRange
   {
@@ -34,22 +34,22 @@ public class PlayerStats : MonoBehaviour
     public int experienceCapIncrease;
   }
 
-    // i - frame
+    // I-Frames (invincibility sementara setelah kena hit)
     [Header("I-Frames")]
-    public float invincibilityDuration;
-    float invicibilityTimer;
-    bool isInvincible;
+    public float invincibilityDuration; // Durasi kebal sementara
+    float invicibilityTimer;            // Timer kebal yang aktif
+    bool isInvincible;                  // Status kebal
 
     public List<LevelRange> levelRanges;
 
     void Awake()
     {
-        characterData = CharacterSelector.GetData();
-        CharacterSelector.instance.DestroySingleton();
+        characterData = CharacterSelector.GetData();         // Ambil data karakter dari selector
+        CharacterSelector.instance.DestroySingleton();       // Hapus selector agar tidak dobel antar scene
 
-        inventoryManager = GetComponent<InventoryManager>();
+        inventoryManager = GetComponent<InventoryManager>(); // Ambil pengelola inventory
 
-        // Initialize stats from ScriptableObject
+        // Inisialisasi statistik dari ScriptableObject karakter
         currentHealth = characterData.MaxHealth;
         currentRecovery = characterData.RecoveredHealth;
         currentMoveSpeed = characterData.MoveSpeed;
@@ -57,7 +57,7 @@ public class PlayerStats : MonoBehaviour
         currentProjectileSpeed = characterData.ProjectileSpeed;
         currentMagnet = characterData.Magnet;
 
-        // Ensure currentMight is at least 1
+        // Pastikan might minimal 1 agar damage tidak nol
         if (currentMight == 0)
         {
             currentMight = 1;
@@ -66,19 +66,19 @@ public class PlayerStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Set initial experience cap based on level ranges
+        // Set EXP cap awal berdasarkan rentang level
         experienceCap = levelRanges[0].experienceCapIncrease;
         
-        // Spawn starting weapon after InventoryManager is initialized
+        // Spawn senjata awal setelah InventoryManager siap
         SpawnedWeapon(characterData.StartingWeapon);
         
-        // Auto-register existing passive items that are already children of Player
+        // Registrasi otomatis item pasif yang sudah menjadi child Player
         RegisterExistingPassiveItems();
     }
 
     void Update()
     {
-        // Handle invincibility timer
+        // Kelola timer invincibility (kebal sementara)
         if (invicibilityTimer > 0)
         {
             invicibilityTimer -= Time.deltaTime;
@@ -88,14 +88,14 @@ public class PlayerStats : MonoBehaviour
             isInvincible = false;
         }
 
-        Recover();
+        Recover(); // Pemulihan HP pasif
     }
     
 
     public void IncreaseExperience(int amount)
     {
-        experience += amount;
-        LevelChecker();
+        experience += amount; // Tambah EXP
+        LevelChecker();       // Cek apakah naik level
     }
 
     void LevelChecker()
@@ -107,7 +107,7 @@ public class PlayerStats : MonoBehaviour
 
             int experienceCapIncrease = 0;
 
-            // Update experience cap based on new level
+            // Update batas EXP berdasarkan level baru
             foreach (LevelRange range in levelRanges)
             {
                 if (level >= range.startLevel && level <= range.endLevel)
@@ -120,7 +120,6 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     public void TakeDamage(float dmg)
     {
         if (!isInvincible)
@@ -143,21 +142,21 @@ public class PlayerStats : MonoBehaviour
     {
         Debug.Log("Player Is DEAD");
 
-        // Baris ini yang akan menyuruh GameManager untuk memberhentikan waktu
+        // Beritahu GameManager untuk menghentikan permainan
         GameManager.instance.TriggerGameOver();
 
-        // (Opsional) Hancurkan player biar visualnya hilang
+        // (Opsional) Hancurkan player agar visual hilang
         Destroy(gameObject); 
     }
 
     public void RestoreHealth(float amount)
     {
-        // only heal the player if their current health is less than max health
+        // Pulihkan HP hanya jika belum mencapai maksimum
         if (currentHealth + amount < characterData.MaxHealth)
         {
             currentHealth += amount;
 
-            // make sure current health does not exceed max health
+            // Pastikan HP tidak melebihi maksimum
             if (currentHealth > characterData.MaxHealth)
             {
                 currentHealth = characterData.MaxHealth;
@@ -168,11 +167,11 @@ public class PlayerStats : MonoBehaviour
 
     void Recover()
     { 
-      // recover health over time
+      // Pulihkan HP seiring waktu
         if (currentHealth < characterData.MaxHealth)
         {
             currentHealth += currentRecovery * Time.deltaTime;
-            // make sure current health does not exceed max health
+            // Pastikan HP tidak melebihi maksimum
             if (currentHealth > characterData.MaxHealth)
             {
                 currentHealth = characterData.MaxHealth;
@@ -182,49 +181,49 @@ public class PlayerStats : MonoBehaviour
 
     public void SpawnedWeapon(GameObject weapon)
     {
-        // Check if weapon slots are full
+        // Cek apakah slot senjata penuh
         if (weaponIndex >= inventoryManager.weaponSlots.Count)
         {
             Debug.LogError("Weapon inventory is full!");
             return;
         }
 
-        // Spawn weapon
+        // Spawn senjata
         GameObject spawnedWeapon = Instantiate(weapon, transform.position, Quaternion.identity);
         spawnedWeapon.transform.SetParent(transform);
         
-        // Add to inventory
+        // Tambahkan ke inventory dan UI
         WeaponController weaponController = spawnedWeapon.GetComponent<WeaponController>();
         inventoryManager.AddWeapon(weaponIndex, weaponController);
         
-        // Increment weapon index for next weapon
+        // Naikkan index untuk senjata berikutnya
         weaponIndex++;
     }
 
     public void SpawnedPassiveItem(GameObject passiveItem)
     {
-        // Check if passive item slots are full
+        // Cek apakah slot item pasif penuh
         if (passiveItemIndex >= inventoryManager.passiveItemSlots.Count)
         {
             Debug.LogError("Passive item inventory is full!");
             return;
         }
 
-        // Spawn passive item
+        // Spawn item pasif
         GameObject spawnedItem = Instantiate(passiveItem, transform.position, Quaternion.identity);
         spawnedItem.transform.SetParent(transform);
         
-        // Add to inventory
+        // Tambahkan ke inventory dan UI
         PassiveItem passiveItemComponent = spawnedItem.GetComponent<PassiveItem>();
         inventoryManager.AddPassiveItem(passiveItemIndex, passiveItemComponent);
         
-        // Increment passive item index for next item
+        // Naikkan index untuk item berikutnya
         passiveItemIndex++;
     }
 
     void RegisterExistingPassiveItems()
     {
-        // Find all passive items that are children of Player
+        // Cari semua item pasif yang sudah menjadi child dari Player
         PassiveItem[] existingItems = GetComponentsInChildren<PassiveItem>();
         
         foreach (PassiveItem item in existingItems)
@@ -235,7 +234,7 @@ public class PlayerStats : MonoBehaviour
                 break;
             }
             
-            // Add existing passive item to inventory
+            // Tambahkan item pasif yang sudah ada ke inventory
             inventoryManager.AddPassiveItem(passiveItemIndex, item);
             passiveItemIndex++;
         }

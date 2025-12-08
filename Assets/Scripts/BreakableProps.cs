@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BreakableProps : MonoBehaviour
 {
-    public float health;
+    public float health; // HP objek yang bisa dihancurkan
 
     public void TakeDamage(float damage)
     {
@@ -17,7 +17,7 @@ public class BreakableProps : MonoBehaviour
 
     public void Kill()
     {
-        Destroy(gameObject);
+        Destroy(gameObject); // Hapus objek dari scene saat HP habis
     }
 
 }

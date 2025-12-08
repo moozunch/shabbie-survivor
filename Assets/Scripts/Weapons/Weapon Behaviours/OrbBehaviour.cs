@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// INHERIT DARI SCRIPT DI ATAS (OrbWeaponBehaviour)
+// Turunan dari OrbWeaponBehaviour: menangani tabrakan dan efeknya
 public class OrbBehaviour : OrbWeaponBehaviour
 {
     // Kita override OnTriggerEnter2D untuk logika tabrakan
@@ -12,12 +12,12 @@ public class OrbBehaviour : OrbWeaponBehaviour
             EnemyStats enemy = col.GetComponent<EnemyStats>();
             if (enemy != null)
             {
-                // Panggil fungsi damage dari script Base (Induk)
+                // Berikan damage memakai kalkulasi dari induk
                 enemy.TakeDamage(GetCurrentDamage());
             }
 
             // 2. KNOCKBACK (Dorong Musuh)
-            // Ini penting buat senjata tipe orbit biar musuh gak nempel terus
+            // Penting agar musuh tidak menempel saat terkena orb
             Rigidbody2D enemyRb = col.GetComponent<Rigidbody2D>();
             if (enemyRb != null)
             {
@@ -25,8 +25,7 @@ public class OrbBehaviour : OrbWeaponBehaviour
                 enemyRb.AddForce(direction * currentKnockback, ForceMode2D.Impulse);
             }
 
-            // PENTING: Kita TIDAK panggil ReducePierce() atau Destroy()
-            // Karena Orb sifatnya menembus semua musuh tanpa hilang.
+            // Orb tidak berkurang pierce dan tidak hancur saat tabrakan
         }
         else if (col.CompareTag("Prop"))
         {

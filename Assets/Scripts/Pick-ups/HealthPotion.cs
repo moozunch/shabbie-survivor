@@ -8,6 +8,7 @@ public class NewBehaviourScript : Pickup, ICollectible
     
     public void Collect()
     {
+         // Saat diambil, pulihkan HP pemain sejumlah yang ditentukan
          PlayerStats player = FindObjectOfType<PlayerStats>();
          player.RestoreHealth(healthRestored);
     }

@@ -4,18 +4,12 @@ using UnityEngine;
 
 public class PropRandomizer : MonoBehaviour
 {
-
-    public List<GameObject> propSpawnPoints;
-    public List<GameObject> propPrefabs;
+    public List<GameObject> propSpawnPoints; // Titik-titik tempat prop akan di-spawn
+    public List<GameObject> propPrefabs;     // Kumpulan prefab prop yang dipilih secara acak
 
     void Start()
     {
-        SpawnProps();
-    }
-
-    void Update()
-    {
-        
+        SpawnProps(); // Spawn seluruh prop saat mulai
     }
 
     void SpawnProps()
@@ -24,7 +18,7 @@ public class PropRandomizer : MonoBehaviour
         {
             int rand = Random.Range(0, propPrefabs.Count);
             GameObject prop = Instantiate(propPrefabs[rand], sp.transform.position, Quaternion.identity);
-            prop.transform.parent = sp.transform;   
+            prop.transform.parent = sp.transform; // Jadikan anak dari spawn point agar rapi di hierarchy
         }
     }
 }

@@ -21,19 +21,21 @@ public class KnifeController : WeaponController
         {
             return;
         }
+        // Spawn prefab pisau di posisi pemain
         GameObject spawnedKnife = Instantiate(weaponData.Prefab, transform.position, Quaternion.identity);
         var kb = spawnedKnife.GetComponent<KnifeBehaviour>();
         if (kb == null)
         {
             return;
         }
-        // Ensure it can register overlaps
+        // Pastikan proyektil memiliki Collider2D trigger agar tabrakan terdeteksi
         var col2d = spawnedKnife.GetComponent<Collider2D>();
         if (col2d == null)
         {
             col2d = spawnedKnife.AddComponent<BoxCollider2D>();
         }
         col2d.isTrigger = true;
+        // Arahkan pisau mengikuti arah gerak terakhir pemain
         kb.DirectionChecker(pm.lastMovedVector);
 
     }

@@ -8,6 +8,7 @@ public class ExperienceGem : Pickup, ICollectible
 
    public void Collect()
    {
+       // Saat diambil, berikan EXP ke pemain
        PlayerStats player = FindObjectOfType<PlayerStats>();
        player.IncreaseExperience(experienceGranted);
    }

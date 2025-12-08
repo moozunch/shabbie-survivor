@@ -5,27 +5,27 @@ using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
-    public List<WeaponController> weaponSlots = new List<WeaponController>(6);
-    public int[] weaponLevels = new int[6];
-    public List<Image> weaponUISlots = new List<Image>(6);
+    public List<WeaponController> weaponSlots = new List<WeaponController>(6); // Slot senjata (maks 6)
+    public int[] weaponLevels = new int[6];                                     // Level tiap senjata
+    public List<Image> weaponUISlots = new List<Image>(6);                       // UI ikon senjata
     
-    public List<PassiveItem> passiveItemSlots = new List<PassiveItem>(6);
-    public int[] passiveItemLevels = new int[6];
-    public List<Image> passiveItemUISlots = new List<Image>(6);
+    public List<PassiveItem> passiveItemSlots = new List<PassiveItem>(6);       // Slot item pasif
+    public int[] passiveItemLevels = new int[6];                                 // Level item pasif
+    public List<Image> passiveItemUISlots = new List<Image>(6);                  // UI ikon item pasif
 
     void Awake()
     {
-        // Initialize lists with null values
+        // Inisialisasi list dengan nilai null
         for (int i = 0; i < 6; i++)
         {
             weaponSlots.Add(null);
             passiveItemSlots.Add(null);
         }
         
-        // Auto-find and assign UI slots from Canvas BEFORE Start() is called
+        // Cari dan assign UI slot dari Canvas sebelum Start() dipanggil
         FindAndAssignUISlots();
         
-        // Disable all empty UI slots at start
+        // Nonaktifkan semua slot UI yang masih kosong
         foreach (Image img in weaponUISlots)
         {
             if (img != null)
@@ -45,14 +45,14 @@ public class InventoryManager : MonoBehaviour
 
     void FindAndAssignUISlots()
     {
-        // Clear existing lists
+        // Bersihkan list yang ada
         weaponUISlots.Clear();
         passiveItemUISlots.Clear();
         
-        // Find all Image components in Canvas
+        // Cari semua komponen Image di Canvas
         Image[] allImages = FindObjectsOfType<Image>();
         
-        // Auto-assign weapon slots (look for "Slot Weapon" in name)
+        // Auto-assign slot senjata (cari nama "Slot Weapon X")
         for (int i = 1; i <= 6; i++)
         {
             Image foundSlot = System.Array.Find(allImages, img => img.gameObject.name == "Slot Weapon " + i);
@@ -68,7 +68,7 @@ public class InventoryManager : MonoBehaviour
             }
         }
         
-        // Auto-assign passive item slots (look for "Slot Passive" in name)
+        // Auto-assign slot item pasif (cari nama "Slot Passive Weapon X")
         for (int i = 1; i <= 6; i++)
         {
             Image foundSlot = System.Array.Find(allImages, img => img.gameObject.name == "Slot Passive Weapon " + i);
@@ -87,9 +87,9 @@ public class InventoryManager : MonoBehaviour
 
     public void AddWeapon(int slotIndex, WeaponController weapon)
     {
-        weaponSlots[slotIndex] = weapon;
+        weaponSlots[slotIndex] = weapon; // Simpan referensi senjata ke slot
         
-        // Set level, if already exists increment, otherwise start at 1
+        // Set level: jika belum ada mulai dari 1, jika sudah naikkan
         if (weaponLevels[slotIndex] == 0)
         {
             weaponLevels[slotIndex] = 1;
@@ -99,7 +99,7 @@ public class InventoryManager : MonoBehaviour
             weaponLevels[slotIndex]++;
         }
         
-        // Update UI
+        // Update UI ikon senjata
         if (weaponUISlots.Count > slotIndex && weaponUISlots[slotIndex] != null)
         {
             if (weapon.weaponData.Icon != null)
@@ -121,9 +121,9 @@ public class InventoryManager : MonoBehaviour
 
     public void AddPassiveItem(int slotIndex, PassiveItem item)
     {
-        passiveItemSlots[slotIndex] = item;
+        passiveItemSlots[slotIndex] = item; // Simpan referensi item pasif ke slot
         
-        // Set level, if already exists increment, otherwise start at 1
+        // Set level: jika belum ada mulai dari 1, jika sudah naikkan
         if (passiveItemLevels[slotIndex] == 0)
         {
             passiveItemLevels[slotIndex] = 1;
@@ -133,7 +133,7 @@ public class InventoryManager : MonoBehaviour
             passiveItemLevels[slotIndex]++;
         }
         
-        // Update UI
+        // Update UI ikon item pasif
         if (passiveItemUISlots.Count > slotIndex && passiveItemUISlots[slotIndex] != null)
         {
             if (item.passiveItemData.Icon != null)
@@ -159,17 +159,17 @@ public class InventoryManager : MonoBehaviour
         {
             WeaponController weapon = weaponSlots[slotIndex];
             
-            // Check if there's a next level prefab
+            // Cek apakah ada prefab level berikutnya
             if (weapon.weaponData.NextLevelPrefab != null)
             {
                 GameObject upgradedWeapon = Instantiate(weapon.weaponData.NextLevelPrefab, weapon.transform.position, Quaternion.identity);
                 upgradedWeapon.transform.SetParent(weapon.transform.parent);
                 
-                // Add upgraded weapon to same slot
+                // Tambahkan senjata yang di-upgrade ke slot yang sama
                 WeaponController weaponController = upgradedWeapon.GetComponent<WeaponController>();
                 AddWeapon(slotIndex, weaponController);
                 
-                // Destroy old weapon
+                // Hancurkan senjata lama
                 Destroy(weapon.gameObject);
                 
                 Debug.Log($"Weapon in slot {slotIndex} leveled up to level {weaponLevels[slotIndex]}");
@@ -187,17 +187,17 @@ public class InventoryManager : MonoBehaviour
         {
             PassiveItem item = passiveItemSlots[slotIndex];
             
-            // Check if there's a next level prefab
+            // Cek apakah ada prefab level berikutnya
             if (item.passiveItemData.NextLevelPrefab != null)
             {
                 GameObject upgradedItem = Instantiate(item.passiveItemData.NextLevelPrefab, item.transform.position, Quaternion.identity);
                 upgradedItem.transform.SetParent(item.transform.parent);
                 
-                // Add upgraded item to same slot
+                // Tambahkan item yang di-upgrade ke slot yang sama
                 PassiveItem passiveItemController = upgradedItem.GetComponent<PassiveItem>();
                 AddPassiveItem(slotIndex, passiveItemController);
                 
-                // Destroy old item
+                // Hancurkan item lama
                 Destroy(item.gameObject);
                 
                 Debug.Log($"Passive item in slot {slotIndex} leveled up to level {passiveItemLevels[slotIndex]}");

@@ -19,5 +19,5 @@ public class PassiveItemScriptableObject : ScriptableObject
 
     [SerializeField]
     float multiplier;
-    public float Multiplier { get => multiplier; }
+    public float Multiplier { get => multiplier; } // Besaran efek (contoh: +20% movement)
 }

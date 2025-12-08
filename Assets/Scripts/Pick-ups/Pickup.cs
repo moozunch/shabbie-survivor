@@ -8,7 +8,7 @@ public class Pickup : MonoBehaviour
     {
         if (col.CompareTag("Player"))
         {
-            Destroy(gameObject);
+            Destroy(gameObject); // Hancurkan objek saat disentuh pemain (efek di subclass)
         }
     }
 }

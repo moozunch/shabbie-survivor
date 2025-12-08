@@ -9,16 +9,16 @@ public class PassiveItem : MonoBehaviour
 
     protected virtual void ApplyModifier()
     {
-        // Method ini akan di-override oleh child classes
+        // Method ini di-override oleh turunan untuk terapkan efek (contoh: speed, damage)
     }
 
     void Awake()
     {
-        playerStats = FindObjectOfType<PlayerStats>();
+        playerStats = FindObjectOfType<PlayerStats>(); // Ambil referensi ke pemain
     }
 
     void Start()
     {
-        ApplyModifier();
+        ApplyModifier(); // Terapkan efek saat item aktif
     }
 }
