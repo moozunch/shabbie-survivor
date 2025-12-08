@@ -15,6 +15,11 @@ public class WeaponController : MonoBehaviour
     protected virtual void Start()
     {
         pm = FindObjectOfType<PlayerMovement>();
+        if (weaponData == null)
+        {
+            enabled = false;
+            return;
+        }
         currentCooldown = weaponData.CooldownDuration;
     }
     

@@ -21,6 +21,11 @@ public class ProjectileWeaponBehaviour : MonoBehaviour
         currentSpeed = weaponData.Speed;
         currentCoolDownDuration = weaponData.CooldownDuration;
         currentPierce = weaponData.Pierce;
+        // Ensure projectiles live long enough to collide; default to 5s if unset
+        if (destroyAfterSeconds <= 0f)
+        {
+            destroyAfterSeconds = 5f;
+        }
     }
 
     public float GetCurrentDamage()

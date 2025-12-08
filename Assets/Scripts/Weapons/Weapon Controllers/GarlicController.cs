@@ -14,15 +14,20 @@ public class GarlicController : WeaponController
     protected override void Attack()
     {
         base.Attack();
-        // KOSONGKAN BAGIAN INI.
-        // Jangan taruh Instantiate di sini. 
-        // Kalau ditaruh sini, nanti setiap cooldown selesai dia bakal spawn garlic baru 
-        // sampai menumpuk ratusan object.
+        
     }
 
     void SpawnGarlic()
     {
         // Spawn Prefab
+        if (weaponData == null)
+        {
+            return;
+        }
+        if (weaponData.Prefab == null)
+        {
+            return;
+        }
         GameObject spawnedGarlic = Instantiate(weaponData.Prefab, transform.position, Quaternion.identity, transform);
 
         // Pastikan posisi nempel di player (Parenting)
@@ -30,5 +35,13 @@ public class GarlicController : WeaponController
 
         // Reset posisi lokal ke 0,0,0 biar pas di tengah player
         spawnedGarlic.transform.localPosition = Vector3.zero;
+
+        // Ensure it has a trigger collider to register overlaps
+        var col2d = spawnedGarlic.GetComponent<Collider2D>();
+        if (col2d == null)
+        {
+            col2d = spawnedGarlic.AddComponent<CircleCollider2D>();
+        }
+        col2d.isTrigger = true;
     }
 }
