@@ -19,6 +19,7 @@ public class OrbController : WeaponController
     protected override void Start()
     {
         base.Start();
+        useManualAttack = false;
         SpawnOrbs();
     }
 

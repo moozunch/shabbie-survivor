@@ -11,6 +11,8 @@ public class WeaponController : MonoBehaviour
     float currentCooldown;
 
     protected PlayerMovement pm;
+    [Header("Attack Input Settings")]
+    public bool useManualAttack = true; // When true, attack only on input
 
     protected virtual void Start()
     {
@@ -25,9 +27,27 @@ public class WeaponController : MonoBehaviour
     
     protected virtual void Update()
     {
-        currentCooldown -= Time.deltaTime;
-        if(currentCooldown <= 0f){
-            Attack();
+        // Cooldown tick
+        if (currentCooldown > 0f)
+        {
+            currentCooldown -= Time.deltaTime;
+        }
+
+        // Manual input: Left mouse click triggers attack if cooldown ready
+        if (useManualAttack)
+        {
+            if (currentCooldown <= 0f && Input.GetMouseButton(0))
+            {
+                Attack();
+            }
+        }
+        else
+        {
+            // Legacy auto-attack behavior
+            if (currentCooldown <= 0f)
+            {
+                Attack();
+            }
         }
     }
 
