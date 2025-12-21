@@ -44,6 +44,8 @@ collab/
 *.booproj
 *.svd
 
+.vscode/
+
 # Rider
 .idea/
 *.sln.iml
