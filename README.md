@@ -62,7 +62,7 @@ Ringkasan direktori utama:
   - `Prefabs/` — prefab (Chunks, Enemies, Passive Items, dst.)
   - `Scenes/` — scene permainan
   - `Scripts/` — skrip C# (logic gameplay)
-  - `Shaders/` — shader kustom (bila ada)
+  - `Shaders/` — shader kustom 
   - `TextMesh Pro/` — aset TMP
 - `Packages/` — manifest dan lock paket
 - `ProjectSettings/` — konfigurasi proyek Unity
