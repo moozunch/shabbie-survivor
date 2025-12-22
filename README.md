@@ -7,7 +7,7 @@ Shabbie Survivor adalah game aksi 2D dengan loop permainan bertahan hidup (survi
 - Gaya: terinspirasi gameplay wave-based/arena 2D dengan fokus pada pergerakan, positioning, dan pemilihan upgrade.
 - Komponen utama: Tilemap 2D, UI (UGUI + TextMesh Pro), Prefab musuh/senjata, dan sistem item pasif.
 
-[VIDEO DEMO]()
+[VIDEO DEMO](https://youtu.be/KoaQp1-Kox0)
 
 ## Versi Unity
 - Editor: 2023.1.22f1 (lihat [ProjectSettings/ProjectVersion.txt](ProjectSettings/ProjectVersion.txt))
